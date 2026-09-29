@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body { @apply bg-ink-0 text-ink-900 dark:bg-ink-900 dark:text-ink-50 font-sans; }
+  ::selection { background: #c9a86a; color: #050506; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs uppercase tracking-luxe font-medium transition-all duration-500 ease-luxe disabled:opacity-40 disabled:cursor-not-allowed; }
+  .btn-primary { @apply btn bg-ink-900 text-ink-0 hover:bg-ink-700 dark:bg-ink-50 dark:text-ink-900 dark:hover:bg-white; }
+  .btn-ghost { @apply btn border border-ink-300/60 text-ink-900 hover:border-ink-900 dark:text-ink-50 dark:border-ink-600 dark:hover:border-ink-50; }
+  .field { @apply w-full bg-transparent border-b border-ink-300/60 py-3 px-1 text-sm placeholder:text-ink-300 focus:border-ink-900 dark:focus:border-ink-50 outline-none transition-colors duration-300; }
+  .eyebrow { @apply text-[11px] uppercase tracking-luxe text-ink-400; }
+  .section { @apply container py-24 md:py-32; }
+}

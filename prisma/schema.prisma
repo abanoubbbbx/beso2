@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SlotStatus {
+  OPEN
+  BLOCKED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  INSTAPAY
+  FAWRY
+  VODAFONE_CASH
+  ORANGE_CASH
+  BANK_TRANSFER
+  CASH
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model User {
+  id        String    @id @default(cuid())
+  phone     String    @unique
+  name      String?
+  role      Role      @default(CLIENT)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone, consumed])
+}
+
+model Package {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String?
+  price       Int
+  currency    String    @default("EGP")
+  duration    String?
+  features    String[]
+  highlighted Boolean   @default(false)
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  bookings    Booking[]
+  updatedAt   DateTime  @updatedAt
+}
+
+model Availability {
+  id       String     @id @default(cuid())
+  date     DateTime   @db.Date
+  timeSlot String
+  status   SlotStatus @default(OPEN)
+  note     String?
+
+  @@unique([date, timeSlot])
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  reference     String        @unique
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id])
+  packageId     String?
+  package       Package?      @relation(fields: [packageId], references: [id])
+  clientName    String
+  clientPhone   String
+  clientEmail   String?
+  date          DateTime      @db.Date
+  timeSlot      String
+  venue         String
+  guests        Int?
+  notes         String?
+  paymentMethod PaymentMethod?
+  paymentNote   String?
+  status        BookingStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([date, timeSlot])
+  @@index([status])
+}
+
+model Inquiry {
+  id            String   @id @default(cuid())
+  name          String
+  phone         String
+  message       String
+  preferredDate DateTime?
+  handled       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+}
