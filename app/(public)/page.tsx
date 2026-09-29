@@ -22,12 +22,12 @@ export default async function HomePage() {
 <section className="container">
   <div className="grid gap-4 md:grid-cols-3">
     {["f1.jpg", "f2.jpg", "f3.jpg"].map((filename) => (
-      <FeatureImage
-        key={filename}
-        src={`/images/${filename}`}
-        alt="Wedding photography"
-      />
-    ))}
+  <FeatureImage
+    key={filename}
+    src={`${process.env.NEXT_PUBLIC_SUPABASE_IMAGES_URL}/${filename}`}
+    alt="Wedding photography"
+  />
+))}
   </div>
 </section>
       <section className="section">
