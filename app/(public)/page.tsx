@@ -24,7 +24,7 @@ export default async function HomePage() {
     {["f1.jpg", "f2.jpg", "f3.jpg"].map((filename) => (
   <FeatureImage
     key={filename}
-    src={`${process.env.NEXT_PUBLIC_SUPABASE_IMAGES_URL}/${filename}`}
+    src={`${process.env.NEXT_SUPABASE_IMAGES_URL}/${filename}`}
     alt="Wedding photography"
   />
 ))}
