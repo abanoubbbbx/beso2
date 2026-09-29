@@ -21,7 +21,7 @@ export default async function HomePage() {
       </section>
 <section className="container">
   <div className="grid gap-4 md:grid-cols-3">
-    {["f1.jpg", "f2.jpg", "f3.jpg"].map((filename) => (
+    {["f1.JPG", "f2.JPG", "f3.JPG"].map((filename) => (
       <FeatureImage
         key={filename}
         src={`/images/${filename}`}
