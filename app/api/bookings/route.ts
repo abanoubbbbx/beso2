@@ -124,21 +124,24 @@ export async function POST(req: Request) {
       });
     });
 
-    // 🔔 إشعار الأدمن
-    sendBookingNotificationToAdmin({
-      reference: booking.reference,
-      clientName: data.clientName,
-      clientPhone: cleanPhone,
-      clientEmail: data.clientEmail || null,
-      date: data.date,
-      timeSlot: data.timeSlot,
-      venue: data.venue,
-      packageName: pkgName,
-      notes: data.notes || null,
-      paymentMethod: data.paymentMethod || null,
-    }).catch((err) => {
+        // 🔔 إشعار الأدمن
+    try {
+      await sendBookingNotificationToAdmin({
+        reference: booking.reference,
+        clientName: data.clientName,
+        clientPhone: cleanPhone,
+        clientEmail: data.clientEmail || null,
+        date: data.date,
+        timeSlot: data.timeSlot,
+        venue: data.venue,
+        packageName: pkgName,
+        notes: data.notes || null,
+        paymentMethod: data.paymentMethod || null,
+      });
+    } catch (err) {
       console.error("Failed to send admin notification:", err);
-    });
+      // مش بنرجع خطأ للعميل لأن الحجز اتم فعلًا في الداتابيز
+    }
 
     return NextResponse.json({ reference: booking.reference }, { status: 201 });
   } catch (e: any) {
