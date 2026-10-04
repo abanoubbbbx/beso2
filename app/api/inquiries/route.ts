@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { contactSchema } from "@/lib/schemas/booking";
 import { sendContactMessageToAdmin } from "@/lib/whatsapp";
 
+export const maxDuration = 30;
+
 export async function POST(req: Request) {
   const parsed = contactSchema.safeParse(await req.json());
   if (!parsed.success || parsed.data.company) {
@@ -23,15 +25,18 @@ export async function POST(req: Request) {
     },
   });
 
-  // 2. إرسال للأدمن على واتساب (fire-and-forget)
-  sendContactMessageToAdmin({
-    name: data.name,
-    phone: data.phone,
-    message: data.message,
-    preferredDate: data.preferredDate || null,
-  }).catch((err) => {
+  // 2. إرسال للأدمن على واتساب — لازم await عشان Vercel متقتلش العملية
+  try {
+    await sendContactMessageToAdmin({
+      name: data.name,
+      phone: data.phone,
+      message: data.message,
+      preferredDate: data.preferredDate || null,
+    });
+  } catch (err) {
     console.error("Failed to send admin contact message:", err);
-  });
+    // مش بنرجع خطأ للعميل لأن الاستفسار اتحفظ في الداتابيز بالفعل
+  }
 
   return NextResponse.json({ ok: true });
 }
